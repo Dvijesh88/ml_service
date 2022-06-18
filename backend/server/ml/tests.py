@@ -27,7 +27,7 @@ class MLTestCase(TestCase):
         respond = my_alg.compute_prediction(input_data)
         self.assertEqual('OK', respond['status'])
         self.assertTrue('label' in respond)
-        self.assertEqual('<=50', respond['label'])
+        self.assertEqual('<=50K', respond['label'])
 
     def test_registry(self):
         registry = MLRegistry()
