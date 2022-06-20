@@ -1,16 +1,15 @@
 # ml_service
-Machine Learning with Web service
-This is first attempt to deploy the ML algorithm and use them as web services.
+Machine Learning via Web Service
+This is the first attempt to deploy the ML algorithm and use it as a web service.
 
-I have followed the folliwing link for the reference but dont blindly copy paste the code, there are so many things you can learn if you sepnd some amount of time.
-<a href = "https://www.deploymachinelearning.com/"> Tutorial Link </a>
+I followed the following link for reference, but don't just copy and paste the code; there are so many things you can learn if you set aside some time.
+a href = "https://www.deploymachinelearning.com/"> a>Tutorial Link
 
-Operations which this project perform are:
-1. Integration og git with you project
-2. build and train two ML models from Sklearn library after perfoming preporcessing on your raw data
-3. Use Joblib to create web service in Django rest framework
-4. Perform test cases to validate the your implementation
-5. Perform A/B test to indentify which ML model is working for your current dataset and based on that you can change the status of the model from testing to production  
+This project's operations are as follows: 
+1. Integration of git with your project
+2. After performing preporcessing on your raw data, build and train two ML models using the Sklearn library.
+3. Use Joblib to create a web service in the Django Rest Framework.
+4. Run test cases to validate your implementation.
+5. Run an A/B test to determine which ML model is working for your current dataset, and then change the model's status from testing to production.
 
-
-To generate requirement.txt file, i have used pipreqs package and you can simply run pipreqs command to generate requirements.txt file autometically
+I used the pipreqs package to generate the requirement.txt file, and you can simply run the pipreqs command to generate the requirement.txt file automatically.
