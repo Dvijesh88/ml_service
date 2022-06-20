@@ -36,8 +36,8 @@ class EndpointViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
 
 
 class MLAlgorithmViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    serializer_class = MLAlgorithmStatusSerializer
-    queryset = MLAlgorithmStatus.objects.all()
+    serializer_class = MLAlgorithmSerializer
+    queryset = MLAlgorithm.objects.all()
 
 def deactivate_other_statues(instance):
     old_statues = MLAlgorithmStatus.objects.filter(parent_mlalgorithm=instance.parent_mlalgorithm, created_at__lt=instance.created_at, active=True)
@@ -58,8 +58,8 @@ class MLAlgorithmStatusViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         except Exception as e:
             raise APIException(str(e))
 
-class MLRequestViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
-    serializer_class = MLRequestSerializer
+class MLRequestViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    serializer_class = MLRequestSerializer  
     queryset = MLRequest.objects.all()
 
 
@@ -74,7 +74,7 @@ class PredictView(views.APIView):
         
         if len(algs) == 0:
             return Response({"status": "error", "message": "ML algorithm not found"}, status=status.HTTP_404_NOT_FOUND)
-        print("-----------------> ", len(algs))
+    
         if len(algs) != 1 and algorithm_status != 'ab_testing':
             return Response({"status": "error", "message": "ML algorithm selection is ambiguous, please select specific version "}, status=status.HTTP_404_NOT_FOUND)
         
@@ -126,7 +126,7 @@ class ABTestViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cre
             raise APIException(str(e))
 
 class StopABTestView(views.APIView):
-    def post(self, request, ab_test_id, format=None):
+    def get(self, request, ab_test_id, format=None):
         try:
             ab_test = ABtesting.objects.get(pk=ab_test_id)
             if ab_test.ended_at is not None:
@@ -136,13 +136,14 @@ class StopABTestView(views.APIView):
             # alg #1 accuracy
             all_responses_1 = MLRequest.objects.filter(parent_mlalgorithm=ab_test.parent_mlalgorithm_1, created_at__gt = ab_test.created_at, created_at__lt = date_now).count()
             correct_responses_1 = MLRequest.objects.filter(parent_mlalgorithm=ab_test.parent_mlalgorithm_1, created_at__gt = ab_test.created_at, created_at__lt = date_now, response=F('feedback')).count()
-            accuracy_1 = correct_responses_1 / float(all_responses_1)
+            #print("check this ----->",all_responses_1, correct_responses_1)
+            accuracy_1 = float(correct_responses_1 / all_responses_1)
             print(all_responses_1, correct_responses_1, accuracy_1)
 
             # alg #2 accuracy
             all_responses_2 = MLRequest.objects.filter(parent_mlalgorithm=ab_test.parent_mlalgorithm_2, created_at__gt = ab_test.created_at, created_at__lt = date_now).count()
             correct_responses_2 = MLRequest.objects.filter(parent_mlalgorithm=ab_test.parent_mlalgorithm_2, created_at__gt = ab_test.created_at, created_at__lt = date_now, response=F('feedback')).count()
-            accuracy_2 = correct_responses_2 / float(all_responses_2)
+            accuracy_2 = float(correct_responses_2 / all_responses_2)
             print(all_responses_2, correct_responses_2, accuracy_2)
 
             # select algorithm with higher accuracy
